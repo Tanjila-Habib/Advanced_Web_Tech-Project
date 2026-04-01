@@ -28,11 +28,8 @@ private adminRepository: Repository<AdminEntity>,
 
     dto.password = hashedPassword;
 
-    const admin = this.adminRepository.create(dto);
-    const savedAdmin = await this.adminRepository.save(admin);
-
-    savedAdmin.password="";
-    return savedAdmin;
+    return  this.adminRepository.save(dto);
+   
 }
     deleteAdmin(name:string){
         return this.adminRepository.delete({name});
@@ -52,4 +49,19 @@ private adminRepository: Repository<AdminEntity>,
     {
         return this.adminRepository.find({where:{name}});
     }
+   async signin(mydata: AdminDTO) {
+  const admin = await this.adminRepository.findOneBy({ email: mydata.email });
+
+  if (!admin) {
+    return false;
+  }
+
+  const match = await bcrypt.compare(mydata.password, admin.password);
+
+  if (match) {
+    return true;
+  }
+
+  return false;
+}
 }

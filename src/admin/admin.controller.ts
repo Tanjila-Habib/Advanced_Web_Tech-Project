@@ -1,4 +1,4 @@
-import{Controller, Get,Post,Body,Delete, Param,Put, Patch,Query, UsePipes, ValidationPipe, UseInterceptors, UploadedFile,Res,HttpException, HttpStatus} from '@nestjs/common'
+import{Controller, Get,Post,Body,Delete, Param,Put, Patch,Query, UsePipes, ValidationPipe, UseInterceptors, UploadedFile,Res,HttpException, HttpStatus, Session, UnauthorizedException} from '@nestjs/common'
 import { AdminDTO } from './DTO/AdminDTO';
 import{AdminService} from './admin.service';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -84,6 +84,15 @@ getImage(@Param('name') name: string, @Res() res) {
     @Get('search')
     SearchAdmin(@Query('name')name:string):object{
         return this.adminService.searchAdmin(name);
+    }
+    @Post('signin')
+    async signin(@Session() session, @Body() mydto:AdminDTO){
+      const res= await this.adminService.signin(mydto);
+      if(res==true){
+        session.email=mydto.email;
+        return {message:"Login successful"};
+      }
+      throw new UnauthorizedException("Invalid credentials");
     }
     
      
