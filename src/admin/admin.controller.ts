@@ -103,8 +103,8 @@ getImage(@Param('name') name: string, @Res() res) {
       throw new UnauthorizedException("Invalid credentials");
     }
     @Post('sendmail')
-sendMail(@Body('email') email: string) {
-  return this.adminService.sendEmail(email);
+    sendMail(@Body('email') email: string) {
+  return this.adminService.sendmail(email);
 }
      
    }

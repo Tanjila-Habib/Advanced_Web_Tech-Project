@@ -65,7 +65,7 @@ private adminRepository: Repository<AdminEntity>,
 
   return false;
 }
-async sendEmail(mydata){
+async sendmail(mydata){
  return   await this.mailService.sendMail({
         to: mydata.email,
         subject: mydata.subject,
