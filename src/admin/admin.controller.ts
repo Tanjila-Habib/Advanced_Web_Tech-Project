@@ -1,13 +1,15 @@
-import{Controller, Get,Post,Body,Delete, Param,Put, Patch,Query, UsePipes, ValidationPipe, UseInterceptors, UploadedFile,Res,HttpException, HttpStatus, Session, UnauthorizedException} from '@nestjs/common'
+import{Controller, Get,Post,Body,Delete, Param,Put, Patch,Query, UsePipes, ValidationPipe, UseInterceptors, UploadedFile,Res,HttpException, HttpStatus, Session, UnauthorizedException, UseGuards} from '@nestjs/common'
 import { AdminDTO } from './DTO/AdminDTO';
 import{AdminService} from './admin.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import type { Response } from 'express';
 import { diskStorage, MulterError } from 'multer';
+import { SessionGuard } from './session.guard';
 
 @Controller('admin')
 export class AdminController{
      constructor(private readonly adminService: AdminService) {}
+    @UseGuards(SessionGuard)
    @Get('getAllAdmin')
 async getAllAdmins() {
   try {
@@ -22,10 +24,12 @@ async getAllAdmins() {
     );
   }
 }
+   @UseGuards(SessionGuard)
     @Get('getZoneOfficerby/:id')
     getZoneOfficer(@Param('id')id:number):object{
         return this.adminService.getZoneOfficer(id);
     }
+    @UseGuards(SessionGuard)
     @Get('getEngineerby/:id')
     getEngineer(@Param('id')id:number):object{
         return this.adminService.getEngineer(id);
@@ -37,7 +41,8 @@ async getAllAdmins() {
         return this.adminService.createAdmin(dto);
         
     } 
-    @Post('upload')
+@UseGuards(SessionGuard)
+ @Post('upload')
 @UseInterceptors(
   FileInterceptor('file', {
     storage: diskStorage({
@@ -68,19 +73,22 @@ uploadFile(@UploadedFile() file: Express.Multer.File) {
 getImage(@Param('name') name: string, @Res() res) {
   return res.sendFile(name, { root: './uploads' });
 }
-    
+    @UseGuards(SessionGuard)
     @Delete('delete/:name')
     deleteAdmin(@Param('name') name:string):object{
         return this.adminService.deleteAdmin(name);
     }
+    @UseGuards(SessionGuard)
     @Put('update/:id')
     updateAdmin(@Param('id')id:number, @Body() mydata:AdminDTO):object{
         return this.adminService.updateAdmin(id,mydata);
     }
+    @UseGuards(SessionGuard)
     @Patch('partialupdate/:id')
     updateAdminPartial(@Param('id')id:number,@Body()mydata:AdminDTO):object{
         return this.adminService.updateAdminPartial(id,mydata);
     }
+    @UseGuards(SessionGuard)
     @Get('search')
     SearchAdmin(@Query('name')name:string):object{
         return this.adminService.searchAdmin(name);
@@ -94,7 +102,10 @@ getImage(@Param('name') name: string, @Res() res) {
       }
       throw new UnauthorizedException("Invalid credentials");
     }
-    
+    @Post('sendmail')
+sendMail(@Body('email') email: string) {
+  return this.adminService.sendEmail(email);
+}
      
    }
 

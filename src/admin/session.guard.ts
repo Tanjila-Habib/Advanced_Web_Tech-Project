@@ -1,13 +1,15 @@
-import { CanActivate, Injectable,ExecutionContext } from "@nestjs/common";
-import { Observable } from "rxjs";
+import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
+
 @Injectable()
-export class SessionGuard implements CanActivate{
-     canActivate(context: ExecutionContext): boolean  {
-        const request=context.switchToHttp().getRequest();
-        if(request.session.email){
-            return true;
-        }
-        return false;
-         
-     }
+export class SessionGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+
+    const request = context.switchToHttp().getRequest();
+
+    if (!request.session.email) {
+      throw new UnauthorizedException('Please login first');
+    }
+
+    return true;
+  }
 }
