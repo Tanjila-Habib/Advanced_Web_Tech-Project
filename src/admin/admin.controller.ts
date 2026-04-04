@@ -5,11 +5,13 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import type { Response } from 'express';
 import { diskStorage, MulterError } from 'multer';
 import { SessionGuard } from './session.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('admin')
 export class AdminController{
      constructor(private readonly adminService: AdminService) {}
-    @UseGuards(SessionGuard)
+    
+    @UseGuards(AuthGuard('jwt'))
    @Get('getAllAdmin')
 async getAllAdmins() {
   try {
@@ -94,14 +96,16 @@ getImage(@Param('name') name: string, @Res() res) {
         return this.adminService.searchAdmin(name);
     }
     @Post('signin')
-    async signin(@Session() session, @Body() mydto:AdminDTO){
-      const res= await this.adminService.signin(mydto);
-      if(res==true){
-        session.email=mydto.email;
-        return {message:"Login successful"};
-      }
-      throw new UnauthorizedException("Invalid credentials");
-    }
+async signin(@Body() mydto: AdminDTO) {
+
+  const result = await this.adminService.signin(mydto);
+
+  if (!result) {
+    throw new UnauthorizedException("Invalid credentials");
+  }
+
+  return result;
+}
     @Post('sendmail')
     sendMail(@Body('email') email: string) {
   return this.adminService.sendmail(email);

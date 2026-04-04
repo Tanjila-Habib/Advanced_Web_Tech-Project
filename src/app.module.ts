@@ -3,6 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AdminModule } from './admin/admin.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
+
 @Module({
   imports: [AdminModule,  TypeOrmModule.forRoot(
 { type: 'postgres',
