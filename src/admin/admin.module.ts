@@ -7,6 +7,8 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
+import { ProfileEntity } from './profile.entity';
+
 @Module({
   imports: [
     PassportModule,
@@ -20,12 +22,12 @@ import { JwtStrategy } from './jwt.strategy';
     port: 587,
     secure: false,
     auth: {
-      user: 'yourgmail@gmail.com',
-      pass: 'your_app_password',
+      user: 'tanjilahabib6@gmail.com',
+      pass: 'cxeq eppu etkm fuxj',
     },
   },
 }),
-    TypeOrmModule.forFeature([AdminEntity]),
+    TypeOrmModule.forFeature([AdminEntity,ProfileEntity]),
   ],
   controllers: [AdminController],
   providers: [AdminService,JwtStrategy],

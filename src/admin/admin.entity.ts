@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn} from 'typeorm';
-@Entity('admin')
+import { Entity, Column, PrimaryGeneratedColumn,OneToOne} from 'typeorm';
+import { ProfileEntity } from './profile.entity';
+@Entity("admin")
 export class AdminEntity{
     @PrimaryGeneratedColumn()
     id:number;
@@ -15,4 +16,6 @@ export class AdminEntity{
     @Column()
     phone_number:string;
 
+ @OneToOne(() => ProfileEntity, profile => profile.admin)
+  profile: ProfileEntity;
 }

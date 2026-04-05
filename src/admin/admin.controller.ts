@@ -95,7 +95,13 @@ getImage(@Param('name') name: string, @Res() res) {
     SearchAdmin(@Query('name')name:string):object{
         return this.adminService.searchAdmin(name);
     }
-    @Post('signin')
+
+  @Post('createProfile')
+  createProfile(@Body() data){
+    return this.adminService.createProfile(data);
+  }
+    
+ @Post('signin')
 async signin(@Body() mydto: AdminDTO) {
 
   const result = await this.adminService.signin(mydto);
@@ -106,9 +112,9 @@ async signin(@Body() mydto: AdminDTO) {
 
   return result;
 }
-    @Post('sendmail')
-    sendMail(@Body('email') email: string) {
-  return this.adminService.sendmail(email);
+@Post('sendmail')
+sendMail(@Body() data) {
+  return this.adminService.sendmail(data);
 }
      
    }

@@ -6,13 +6,15 @@ import { Repository } from "typeorm";
 import * as bcrypt from 'bcrypt';
 import { MailerService } from '@nestjs-modules/mailer';
 import { JwtService } from "@nestjs/jwt";
-
+import { ProfileEntity } from "./profile.entity";
 
 @Injectable()
 export class AdminService{
    constructor(
 @InjectRepository(AdminEntity)
 private adminRepository: Repository<AdminEntity>,
+@InjectRepository(ProfileEntity)
+private profileRepository:Repository<ProfileEntity>,
  private mailService: MailerService,
  private jwtService:JwtService
 ) {}
@@ -79,11 +81,25 @@ private adminRepository: Repository<AdminEntity>,
     access_token:token
   };
 }
-async sendmail(mydata){
+async createProfile(mydata)
+{
+    const admin=await this.adminRepository.findOneBy({id:mydata.adminId});
+    if(!admin){
+        throw new Error("Admin not found");
+    }
+    const profile=this.profileRepository.create({
+        address:mydata.address,
+        department:mydata.department,
+        admin:admin
+
+    });
+    return this.profileRepository.save(profile);
+}
+async sendmail(data){
  return   await this.mailService.sendMail({
-        to: mydata.email,
-        subject: mydata.subject,
-        text: mydata.text, 
+        to: data.email,
+        subject: data.subject,
+        text: data.text, 
       });
 
 }
