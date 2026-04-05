@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn,OneToOne} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn,OneToOne, OneToMany} from 'typeorm';
 import { ProfileEntity } from './profile.entity';
+import { ZoneOfficerEntity } from './zoneOfficer.entity';
 @Entity("admin")
 export class AdminEntity{
     @PrimaryGeneratedColumn()
@@ -8,7 +9,7 @@ export class AdminEntity{
     name:string;
     @Column()
     email:string;
-    @Column()
+    @Column({select:false})
     
     password:string;
     @Column()
@@ -18,4 +19,9 @@ export class AdminEntity{
 
  @OneToOne(() => ProfileEntity, profile => profile.admin)
   profile: ProfileEntity;
+
+  @OneToMany(()=>ZoneOfficerEntity,officer=>officer.admin)
+  zoneOfficers:ZoneOfficerEntity[];
+
+
 }

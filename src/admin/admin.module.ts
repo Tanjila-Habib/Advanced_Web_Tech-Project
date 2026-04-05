@@ -8,12 +8,13 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt.strategy';
 import { ProfileEntity } from './profile.entity';
+import { ZoneOfficerEntity } from './zoneOfficer.entity';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret:'mySecretkey',
+      secret:'DhakaCityCorporationKey',
       signOptions:{expiresIn:'1h'}
     }),
     MailerModule.forRoot({
@@ -27,7 +28,7 @@ import { ProfileEntity } from './profile.entity';
     },
   },
 }),
-    TypeOrmModule.forFeature([AdminEntity,ProfileEntity]),
+    TypeOrmModule.forFeature([AdminEntity,ProfileEntity,ZoneOfficerEntity]),
   ],
   controllers: [AdminController],
   providers: [AdminService,JwtStrategy],
